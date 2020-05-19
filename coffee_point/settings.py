@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from django.urls import reverse, reverse_lazy
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -56,7 +58,9 @@ ROOT_URLCONF = 'coffee_point.urls'
 TEMPLATES = [
     {
        'BACKEND': 'django.template.backends.jinja2.Jinja2',
-       'DIRS': [],
+       'DIRS': [os.path.join(BASE_DIR, 'cafe/templates'),
+                os.path.join(BASE_DIR, 'templates'),
+                ],
        'APP_DIRS': True,
        'OPTIONS': {
          'environment': 'coffee_point.jinja2.environment'
@@ -64,7 +68,7 @@ TEMPLATES = [
      },
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'cafe/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -133,3 +137,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = 'static'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = 'media'
+
+LOGIN_REDIRECT_URL = reverse_lazy('home')
+LOGOUT_REDIRECT_URL = reverse_lazy('login')

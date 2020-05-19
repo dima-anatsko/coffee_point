@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col-sm-3 align-self-center">
+            <form class="form-signin" method="post">
+                <div class="form-label-group mt-2">
+                    <label for="id_username">Имя пользователя:</label>
+                    <input type="text" id="id_username" name="username" class="form-control" maxlength="150" autocomplete="username" required="" autofocus="" autocapitalize="none">
+                </div>
+                <div class="form-label-group mt-2">
+                    <label for="id_password">Пароль:</label>
+                    <input type="password" name="password" id="id_password" class="form-control" placeholder="Password" required="" autocomplete="current-password">
+                </div>
+                {{ csrf_input }}
+                <button class="btn btn-lg btn-info btn-block mt-4" type="submit">Войти</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

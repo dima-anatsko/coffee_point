@@ -1,0 +1,39 @@
+<div class="container-fluid">
+{% set basket_items = basket.items.all() %}
+{% for item in basket_items %}
+    <div class="row mt-3">
+        <div class="col-6">{{ item.product }}</div>
+            <div class="col-1">
+                <form method="post" action="{{ url('basket-edit') }}">
+                    {{ csrf_input }}
+                    <input type="hidden" name="product_id" value="{{ item.product.id }}">
+                    <input type="hidden" name="product_count" value="{{ -1 }}">
+                    <button type="submit" class="font-weight-bold btn-danger rounded-sm rounded-circle">&ndash;</button>
+                </form>
+            </div>
+        <div class="col-1">{{ item.count }}</div>
+        <div class="col-1">
+            <form method="post" action="{{ url('basket-edit') }}">
+                {{ csrf_input }}
+                <input type="hidden" name="product_id" value="{{ item.product.id }}">
+                <input type="hidden" name="product_count" value="{{ 1 }}">
+                <button type="submit" class="btn-success rounded-sm rounded-circle">+</button>
+            </form>
+        </div>
+        <div class="col-2">{{ "x {:.2f}".format(item.product.price) }}</div>
+        <div class="col-1">{{ "{:.2f}".format(item.count * item.product.price) }}</div>
+    </div>
+{% endfor %}
+</div>
+<div class="container-fluid">
+    <div class="row fixed-bottom m-1 mb-3 mr-3">
+        <div class="col-xl-3">
+            <p class="h5">Итого: {{ "{:.2f} руб".format(total_cost) }}</p>
+            <form method="post" action="{{ url('order') }}">
+            {{ csrf_input }}
+            <input type="hidden" name="basket_id" value="{{ basket.id }}">
+            <button type="submit" class="btn btn-info btn-lg btn-block text-center">Оплата</button>
+            </form>
+        </div>
+    </div>
+</div>

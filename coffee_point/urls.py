@@ -19,6 +19,7 @@ from schema_graph.views import Schema
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')),
     path('', include('cafe.urls')),
     path("schema/", Schema.as_view()),
 ]

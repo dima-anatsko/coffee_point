@@ -1,0 +1,17 @@
+<div class="card-deck">
+    {% for category in categories %}
+        {% if category.slug == selected_category %}
+            {% set bg, text = "bg-info", "text-light" %}
+        {% else %}
+            {% set bg, text = "", "text-dark" %}
+        {% endif %}
+        <div  class="card {{ bg }}">
+            {% set category_img = category.images_category.first() %}
+            <img src="{{ category_img.image.url }}" class="card-img-top" alt="">
+            <div class="card-body text-center">
+              <a href="{{ url ('home') }}?category={{ category.slug }}"
+                 class="stretched-link card-text {{ text }}">{{ category }}</a>
+            </div>
+        </div>
+    {% endfor %}
+</div>

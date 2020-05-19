@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xl-3">
+                {% include 'basket.html' %}
+            </div>
+            <div class="col-xl-9">
+                <div class="row">
+                    <div class="col">
+                        {% include 'categories.html' %}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    {% include 'product_list.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

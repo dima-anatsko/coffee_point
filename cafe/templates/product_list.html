@@ -1,0 +1,22 @@
+{% for product in object_list %}
+    <div class="col-xl-2 mt-xl-3">
+        <div class="card product-height align-items-end">
+            {% set product_image=product.images_product.first() %}
+            <div class="container-fluid text-center">
+                {% if product_image %}
+                    <img src="{{ product_image.image.url }}" class="card-img-top" alt="">
+                {% else %}
+                    <img src="/media/products/white_.jpg" class="card-img-top" alt="">
+                {% endif %}
+                {% set product_count=1 %}
+                    <form method="post" action="{{ url('basket-edit') }}">
+                        {{ csrf_input }}
+                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                        <input type="hidden" name="product_count" value="{{ product_count }}">
+                        <button type="submit" class="btn stretched-link">{{ product.title }}</button>
+                    </form>
+                <p class="text-info font-weight-bold">{{ "{:.2f} руб".format(product.price) }}</p>
+            </div>
+        </div>
+    </div>
+{% endfor %}
