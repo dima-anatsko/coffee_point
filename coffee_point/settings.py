@@ -68,7 +68,9 @@ TEMPLATES = [
      },
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'cafe/templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'cafe/templates'),
+                 os.path.join(BASE_DIR, 'templates'),
+                 ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -149,3 +151,19 @@ try:
     django_heroku.settings(locals())
 except ImportError:
     pass
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+        },
+    },
+}

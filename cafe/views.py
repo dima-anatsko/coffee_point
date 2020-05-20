@@ -77,7 +77,6 @@ class OrderView(LoginRequiredMixin, FormView):
                 flow_charts = Product.objects.filter(
                     id=item.product.id
                 ).prefetch_related('flow_chart').first()
-                print(f'{item.product=}')
                 for flow_chart in flow_charts.flow_chart.all():
                     shipment_of_cost = Shipment.objects.filter(
                         ingredient=flow_chart.ingredient,
@@ -110,3 +109,11 @@ class OrderView(LoginRequiredMixin, FormView):
 
     def get_success_url(self):
         return self.request.META.get('HTTP_REFERER') or reverse_lazy('home')
+
+
+class ReportView(LoginRequiredMixin, ListView):
+    template_name = 'report.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=object_list, **kwargs)
+        return context
