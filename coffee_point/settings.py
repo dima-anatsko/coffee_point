@@ -143,3 +143,9 @@ MEDIA_ROOT = 'media'
 
 LOGIN_REDIRECT_URL = reverse_lazy('home')
 LOGOUT_REDIRECT_URL = reverse_lazy('login')
+
+try:
+    import django_heroku
+    django_heroku.settings(locals())
+except ImportError:
+    pass
