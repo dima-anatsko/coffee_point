@@ -4,7 +4,7 @@
             {% set product_image=product.images_product.first() %}
             <div class="container-fluid text-center">
                 {% if product_image %}
-                    <img src="{{ product_image.image.url }}" class="card-img-top" alt="">
+                    <img src="{{ product_image.image_url }}" class="card-img-top" alt="">
                 {% else %}
                     <img src="/media/products/white_.jpg" class="card-img-top" alt="">
                 {% endif %}
