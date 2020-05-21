@@ -1,4 +1,5 @@
 from django import forms
+from django.utils import timezone
 
 from cafe.models import Product, Basket
 
@@ -28,3 +29,20 @@ class OrderForm(forms.Form):
         if not Basket.objects.filter(id=basket_id).exists():
             raise forms.ValidationError('Invalid basket ID')
         return basket_id
+
+
+class ReportEditForm(forms.Form):
+    from_date = forms.DateField(required=True)
+    to_date = forms.DateField(required=True)
+
+    def clean_from_date(self):
+        from_date = self.cleaned_data['from_date']
+        if from_date > timezone.now().date():
+            raise forms.ValidationError('Дата не должна быть больше текущей')
+        return from_date
+
+    def clean_to_date(self):
+        to_date = self.cleaned_data['to_date']
+        if to_date > timezone.now().date():
+            raise forms.ValidationError('Дата не должна быть больше текущей')
+        return to_date

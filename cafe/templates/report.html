@@ -1,15 +1,53 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div class="container-fluid">
-    Тут будет меню для выбора типа отчета
+    <div class="container">
+        <form method="post" action="{{ url('report') }}">
+            {{ csrf_input }}
+            <div class="form-row align-items-end justify-content-md-center">
+                <div class="form-group col-2">
+                    <label for="from-date-input">От даты:</label>
+                    <input class="form-control" type="date" value="{{ now().date() }}" id="from_date" name="from_date">
+                </div>
+                <div class="form-group col-2">
+                    <label for="to-date-input">До даты:</label>
+                    <input class="form-control" type="date" value="{{ now().date() }}" id="to_date" name="to_date">
+                </div>
+                <div class="form-group col align-bottom">
+                    <button type="submit" class="btn btn-outline-info">Сформировать отчёт</button>
+                </div>
+            </div>
+        </form>
         <div class="row">
             Тут будут отчеты
-{#            <div class="col-xl-3">#}
-{##}
-{#            </div>#}
-{#            <div class="col-xl-9">#}
-{#                #}
-{#            </div>#}
+            <table class="table table-sm table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Имя</th>
+                        <th scope="col">Фамилия</th>
+                        <th scope="col">Username</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>Mark</td>
+                        <td>Otto</td>
+                        <td>@mdo</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">2</th>
+                        <td>Jacob</td>
+                        <td>Thornton</td>
+                        <td>@fat</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">3</th>
+                        <td colspan="2">Larry the Bird</td>
+                        <td>@twitter</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 {% endblock content %}

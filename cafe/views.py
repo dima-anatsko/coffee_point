@@ -2,9 +2,9 @@ from contextlib import suppress
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import ListView, FormView
+from django.views.generic import ListView, FormView, TemplateView
 
-from cafe.forms import BasketEditForm, OrderForm
+from cafe.forms import BasketEditForm, OrderForm, ReportEditForm
 from cafe.models import Product, Basket, BasketItem, Shipment, Order
 from cafe.services import get_basket_items_latest, isbasket_or_create, \
     get_total_cost_basket, get_categories_pr_images, get_category_request, \
@@ -93,7 +93,8 @@ class OrderView(LoginRequiredMixin, FormView):
                         # if the ingredient is not in stock we take its cost
                         # from the last purchase
                         shipment_of_cost = Shipment.objects.filter(
-                            ingredient=flow_chart.ingredient).latest()
+                            ingredient=flow_chart.ingredient
+                        ).order_by('-date').first()
                     if shipment_of_cost:
                         cost_ingredient = shipment_of_cost.price
                     else:
@@ -111,9 +112,27 @@ class OrderView(LoginRequiredMixin, FormView):
         return self.request.META.get('HTTP_REFERER') or reverse_lazy('home')
 
 
-class ReportView(LoginRequiredMixin, ListView):
+# class ReportView(LoginRequiredMixin, TemplateView):
+#     template_name = 'report.html'
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         # context['latest_articles'] = Article.objects.all()[:5]
+#         return context
+
+
+class ReportEditView(LoginRequiredMixin, FormView):
+    http_method_names = ['get', 'post']
+    form_class = ReportEditForm
     template_name = 'report.html'
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(object_list=object_list, **kwargs)
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return self.request.META.get('HTTP_REFERER') or reverse_lazy('home')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context['latest_articles'] = Article.objects.all()[:5]
         return context
