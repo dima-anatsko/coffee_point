@@ -2,7 +2,8 @@ from contextlib import suppress
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import ListView, FormView, TemplateView
+from django.utils import timezone
+from django.views.generic import ListView, TemplateView, FormView
 
 from cafe.forms import BasketEditForm, OrderForm, ReportEditForm
 from cafe.models import Product, Basket, BasketItem, Shipment, Order
@@ -112,27 +113,17 @@ class OrderView(LoginRequiredMixin, FormView):
         return self.request.META.get('HTTP_REFERER') or reverse_lazy('home')
 
 
-# class ReportView(LoginRequiredMixin, TemplateView):
-#     template_name = 'report.html'
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         # context['latest_articles'] = Article.objects.all()[:5]
-#         return context
-
-
-class ReportEditView(LoginRequiredMixin, FormView):
-    http_method_names = ['get', 'post']
-    form_class = ReportEditForm
+class ReportEditView(LoginRequiredMixin, TemplateView):
     template_name = 'report.html'
-
-    def form_valid(self, form):
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return self.request.META.get('HTTP_REFERER') or reverse_lazy('home')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # context['latest_articles'] = Article.objects.all()[:5]
+        if self.request.GET:
+            context['from_date'] = self.request.GET.get('from_date')
+            context['to_date'] = self.request.GET.get('to_date')
+        else:
+            context['from_date'] = timezone.now().date()
+            context['to_date'] = timezone.now().date()
+        form = ReportEditForm(context)
+        context["form"] = form
         return context

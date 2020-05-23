@@ -35,14 +35,20 @@ class ReportEditForm(forms.Form):
     from_date = forms.DateField(required=True)
     to_date = forms.DateField(required=True)
 
-    def clean_from_date(self):
-        from_date = self.cleaned_data['from_date']
-        if from_date > timezone.now().date():
+    def _clean_date(self, date):
+        if date > timezone.now().date():
             raise forms.ValidationError('Дата не должна быть больше текущей')
-        return from_date
+        return date
+
+    def clean_from_date(self):
+        return self._clean_date(self.cleaned_data['from_date'])
 
     def clean_to_date(self):
         to_date = self.cleaned_data['to_date']
-        if to_date > timezone.now().date():
-            raise forms.ValidationError('Дата не должна быть больше текущей')
+        from_date = self.cleaned_data.get('from_date')
+        if from_date and from_date > to_date:
+            raise forms.ValidationError(
+                'Дата не должна быть больше начальной'
+            )
+        self._clean_date(to_date)
         return to_date
