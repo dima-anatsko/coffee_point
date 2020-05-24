@@ -139,10 +139,10 @@ class ReportEditView(LoginRequiredMixin, TemplateView):
             orders_date['revenue'] = orders_date.get('revenue', 0) + order.price
             orders_date['cost'] = orders_date.get('cost', 0) + order.cost
             orders_date['count_orders'] = orders_date.get('count_orders', 0) + 1
-        context['orders']['total'] = {
-            'revenue': sum(order.price for order in orders),
-            'cost': sum(order.cost for order in orders),
-            'count_orders': len(orders)
-        }
-        print(context['orders']['total'])
+        if context['orders']:
+            context['orders']['total'] = {
+                'revenue': sum(order.price for order in orders),
+                'cost': sum(order.cost for order in orders),
+                'count_orders': len(orders)
+            }
         return context
