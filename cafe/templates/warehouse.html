@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <table class="table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Ингредиент</th>
+                            <th scope="col">Ед. измерения</th>
+                            <th scope="col">Количество</th>
+                            <th scope="col">Цена</th>
+                            <th scope="col">Стоимость</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% set d={'TH': 'Шт', 'LI': 'Литр', 'KI': 'Кг'} %}
+                        {% for ingredient in object_list %}
+                            <tr>
+                                <th scope="row">{{ loop.index }}</th>
+                                <td>{{ ingredient.shipment }}</td>
+                                <td>{{ d[ingredient.shipment.ingredient.measure_unit] }}</td>
+                                <td>{{ "{:.2f}".format(ingredient.value|round(2, 'common')) }}</td>
+                                <td>{{ "{:.2f}".format(ingredient.shipment.price|round(2, 'common')) }}</td>
+                                <td>{{ "{:.2f}".format((ingredient.value * ingredient.shipment.price)|round(2, 'common')) }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

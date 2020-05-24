@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.views.generic import ListView, TemplateView, FormView
 
 from cafe.forms import BasketEditForm, OrderForm, ReportEditForm
-from cafe.models import Product, Basket, BasketItem, Shipment, Order
+from cafe.models import Product, Basket, BasketItem, Shipment, Order, Warehouse
 from cafe.services import get_basket_items_latest, isbasket_or_create, \
     get_total_cost_basket, get_categories_pr_images, get_category_request, \
     products_in_category
@@ -151,3 +151,11 @@ class ReportEditView(LoginRequiredMixin, TemplateView):
                 'count_orders': len(orders)
             }
         return context
+
+
+class WarehouseListView(LoginRequiredMixin, ListView):
+    model = Warehouse
+    template_name = 'warehouse.html'
+
+    def get_queryset(self):
+        return Warehouse.objects.prefetch_related('shipment')
