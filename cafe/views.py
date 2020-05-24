@@ -1,3 +1,4 @@
+from datetime import datetime, date
 from contextlib import suppress
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -122,20 +123,24 @@ class ReportEditView(LoginRequiredMixin, TemplateView):
             context['from_date'] = self.request.GET.get('from_date')
             context['to_date'] = self.request.GET.get('to_date')
         else:
-            context['from_date'] = timezone.now().date()
-            context['to_date'] = timezone.now().date()
+            context['from_date'] = str(timezone.now().date())
+            context['to_date'] = str(timezone.now().date())
         form = ReportEditForm(context)
         context['form'] = form
-        orders = Order.objects.filter(created_at__range=[
-            context['from_date'],
-            context['to_date']
-        ])
+        orders = Order.objects.filter(
+            created_at__gte=datetime.strptime(
+                context['from_date'] + ' 00:00:00', '%Y-%m-%d %H:%M:%S'
+            ),
+            created_at__lte=datetime.strptime(
+                context['to_date'] + ' 23:59:59.999', '%Y-%m-%d %H:%M:%S.%f'
+            )
+        )
         context['orders'] = {}
         for order in orders:
-            date = str(order.created_at.date())
-            if not context['orders'].get(date):
-                context['orders'][date] = {}
-            orders_date = context['orders'][date]
+            date_ = str(order.created_at.date())
+            if not context['orders'].get(date_):
+                context['orders'][date_] = {}
+            orders_date = context['orders'][date_]
             orders_date['revenue'] = orders_date.get('revenue', 0) + order.price
             orders_date['cost'] = orders_date.get('cost', 0) + order.cost
             orders_date['count_orders'] = orders_date.get('count_orders', 0) + 1
