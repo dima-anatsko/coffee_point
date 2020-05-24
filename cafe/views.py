@@ -125,5 +125,24 @@ class ReportEditView(LoginRequiredMixin, TemplateView):
             context['from_date'] = timezone.now().date()
             context['to_date'] = timezone.now().date()
         form = ReportEditForm(context)
-        context["form"] = form
+        context['form'] = form
+        orders = Order.objects.filter(created_at__range=[
+            context['from_date'],
+            context['to_date']
+        ])
+        context['orders'] = {}
+        for order in orders:
+            date = str(order.created_at.date())
+            if not context['orders'].get(date):
+                context['orders'][date] = {}
+            orders_date = context['orders'][date]
+            orders_date['revenue'] = orders_date.get('revenue', 0) + order.price
+            orders_date['cost'] = orders_date.get('cost', 0) + order.cost
+            orders_date['count_orders'] = orders_date.get('count_orders', 0) + 1
+        context['orders']['total'] = {
+            'revenue': sum(order.price for order in orders),
+            'cost': sum(order.cost for order in orders),
+            'count_orders': len(orders)
+        }
+        print(context['orders']['total'])
         return context

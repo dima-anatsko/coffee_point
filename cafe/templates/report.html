@@ -18,37 +18,47 @@
                 </div>
             </div>
         </form>
+    <br>
+    <br>
         <div class="row">
-            Тут будут отчеты
-            <table class="table table-sm table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Имя</th>
-                        <th scope="col">Фамилия</th>
-                        <th scope="col">Username</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td colspan="2">Larry the Bird</td>
-                        <td>@twitter</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="col">
+                <p class="text-center h5">Отчёт с {{ from_date }} по {{ to_date }}</p>
+                <br>
+                <table class="table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Дата</th>
+                            <th scope="col">Выручка, руб.</th>
+                            <th scope="col">Прибыль, руб.</th>
+                            <th scope="col">Кол-во чеков</th>
+                            <th scope="col">Средний чек, руб.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for date in orders %}
+                            {% if date=='total' %}
+                                <tr>
+                                    <th scope="row" colspan="2">Итого:</th>
+                                    <th scope="row">{{ "{:.2f}".format(orders[date].revenue) }}</th>
+                                    <th scope="row">{{ "{:.2f}".format((orders[date].revenue - orders[date].cost)|round(2, 'common')) }}</th>
+                                    <th scope="row">{{ orders[date].count_orders }}</th>
+                                    <th scope="row">{{ "{:.2f}".format((orders[date].revenue / orders[date].count_orders)|round(2, 'common')) }}</th>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <th scope="row">{{ loop.index }}</th>
+                                    <td>{{ date }}</td>
+                                    <td>{{ "{:.2f}".format(orders[date].revenue) }}</td>
+                                    <td>{{ "{:.2f}".format((orders[date].revenue - orders[date].cost)|round(2, 'common')) }}</td>
+                                    <td>{{ orders[date].count_orders }}</td>
+                                    <td>{{ "{:.2f}".format((orders[date].revenue / orders[date].count_orders)|round(2, 'common')) }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 {% endblock content %}
