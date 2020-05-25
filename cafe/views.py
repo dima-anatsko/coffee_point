@@ -1,6 +1,8 @@
 from datetime import datetime, date
 from contextlib import suppress
 
+from django.utils.timezone import pytz
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.utils import timezone
@@ -127,12 +129,17 @@ class ReportEditView(LoginRequiredMixin, TemplateView):
             context['to_date'] = str(timezone.now().date())
         form = ReportEditForm(context)
         context['form'] = form
+        _timezone = pytz.timezone(settings.TIME_ZONE)
         orders = Order.objects.filter(
-            created_at__gte=datetime.strptime(
-                context['from_date'] + ' 00:00:00', '%Y-%m-%d %H:%M:%S'
+            created_at__gte=_timezone.localize(
+                datetime.strptime(
+                    context['from_date'] + ' 00:00:00', '%Y-%m-%d %H:%M:%S'
+                )
             ),
-            created_at__lte=datetime.strptime(
-                context['to_date'] + ' 23:59:59.999', '%Y-%m-%d %H:%M:%S.%f'
+            created_at__lte= _timezone.localize(
+                datetime.strptime(
+                    context['to_date'] + ' 23:59:59.999999', '%Y-%m-%d %H:%M:%S.%f'
+                )
             )
         )
         context['orders'] = {}
