@@ -5,8 +5,6 @@
             <div class="container-fluid text-center">
                 {% if product_image %}
                     <img src="{{ product_image.image_url }}" class="card-img-top" alt="">
-                {% else %}
-                    <img src="/media/products/white_.jpg" class="card-img-top" alt="">
                 {% endif %}
                 {% set product_count=1 %}
                     <form method="post" action="{{ url('basket-edit') }}">
