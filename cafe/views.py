@@ -165,4 +165,5 @@ class WarehouseListView(LoginRequiredMixin, ListView):
     template_name = 'warehouse.html'
 
     def get_queryset(self):
+        print(settings.BASE_DIR)
         return Warehouse.objects.prefetch_related('shipment')
