@@ -136,9 +136,9 @@ class ReportEditView(LoginRequiredMixin, TemplateView):
                     context['from_date'] + ' 00:00:00', '%Y-%m-%d %H:%M:%S'
                 )
             ),
-            created_at__lte= _timezone.localize(
+            created_at__lte=_timezone.localize(
                 datetime.strptime(
-                    context['to_date'] + ' 23:59:59.999999', '%Y-%m-%d %H:%M:%S.%f'
+                    context['to_date'] + ' 23:59:59.999999', '%Y-%m-%d %H:%M:%S.%f'  # noqa
                 )
             )
         )
@@ -165,5 +165,4 @@ class WarehouseListView(LoginRequiredMixin, ListView):
     template_name = 'warehouse.html'
 
     def get_queryset(self):
-        print(settings.BASE_DIR)
         return Warehouse.objects.prefetch_related('shipment')
