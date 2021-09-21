@@ -99,10 +99,7 @@ class OrderView(LoginRequiredMixin, FormView):
                         shipment_of_cost = Shipment.objects.filter(
                             ingredient=flow_chart.ingredient
                         ).order_by('-date').first()
-                    if shipment_of_cost:
-                        cost_ingredient = shipment_of_cost.price
-                    else:
-                        cost_ingredient = 0
+                    cost_ingredient = shipment_of_cost.price if shipment_of_cost else 0
                     order_cost += round(
                         cost_ingredient * item.count * flow_chart.value, 2)
             Order.objects.create(
